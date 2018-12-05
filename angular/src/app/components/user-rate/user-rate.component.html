@@ -1,0 +1,41 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">WHF</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+          aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarText">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/users']">App Users</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/github']">Github Rates</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" (click)="logOut()">Logout</a>
+      </li>
+    </ul>
+    <span class="navbar-text">
+    </span>
+  </div>
+</nav>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">Github User - {{username}}</li>
+  </ol>
+</nav>
+<div class="container wrapper">
+  <div  class="card-container card centerdiv">
+    <div class="row">
+      <img class="profile-img-card" src="{{avatar_url}}"/>
+    </div>
+    <div class="row centre">
+    <ngb-rating [(rate)]="currentRate">
+      <ng-template let-fill="fill" let-index="index">
+        <span class="star" [class.filled]="fill === 100" (click)="rateClick(index)" [class.bad]="index < 3">&#9733;</span>
+      </ng-template>
+    </ngb-rating>
+    </div>
+  </div>
+</div>

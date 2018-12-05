@@ -1,0 +1,79 @@
+version: '3.5'
+
+networks:
+  default:
+    driver: bridge
+
+services:
+  postgres:
+    # In production, you may want to use a managed database service
+    image: postgres:9.6-alpine
+    container_name: postgres
+    environment:
+    - POSTGRES_DB=whf_test
+    - POSTGRES_USER=symfony
+    - POSTGRES_PASSWORD=symfony
+    - PGDATA=/var/lib/postgresql/data/db-files/
+    volumes:
+    - ./dockerfiles/db-data:/var/lib/postgresql/data:rw
+    # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+    # - ./docker/db/data:/var/lib/postgresql/data:rw
+    ports:
+      - "5432:5432"
+
+  nginx_back:
+      build: ./dockerfiles/nginx_back
+      container_name: whf_nginx_back
+      ports:
+      - 8000:80
+      volumes:
+      - ./symfony:/var/www
+      depends_on:
+      - php
+
+  nginx_front:
+    build: ./dockerfiles/nginx_front
+    container_name: whf_nginx_front
+    restart: always
+    volumes:
+    - "./dockerfiles/nginx_front/nginx.conf:/etc/nginx/conf.d/default.conf"
+    - "./angular:/var/www/"
+    ports:
+    - "8001:80"
+    depends_on:
+    - node
+
+  php:
+    build: ./dockerfiles/php
+    container_name: whf_php
+    restart: always
+    volumes:
+      - "./symfony:/var/www"
+      - "./dockerfiles/etc/php/php.ini:/usr/local/etc/php/conf.d/custom.ini"
+    environment:
+      - "PHP_IDE_CONFIG=serverName=PHPSTORM"
+    links:
+      - postgres
+
+  node:
+    build: ./dockerfiles/node
+    container_name: angular_node
+    ports:
+    - 4200:4200
+    volumes:
+    - "./angular:/home/node/app"
+    command:
+    - /bin/sh
+    - -c
+    - |
+      cd /home/node/app/ && npm install && npm audit fix && npm run-script build
+    expose:
+    - "4200"
+
+  redis:
+    image: 'bitnami/redis:latest'
+    container_name: whf_redis
+    environment:
+    - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+    - ./dockerfiles/redis-data:/data

@@ -1,0 +1,67 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">WHF</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+            aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/users']">App Users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/github']">Github Rates</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" (click)="logOut()">Logout</a>
+            </li>
+        </ul>
+        <span class="navbar-text">
+    </span>
+    </div>
+</nav>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">Github User - Evaluate</li>
+    </ol>
+</nav>
+<div class="container ">
+    <div class="row">
+        <nav>
+            <ul class="pagination justify-content-end">
+                <li class="page-item"><a class="page-link" (click)="previousPage()">Previous</a></li>
+                <li class="page-item"><a class="page-link"  (click)="nextPage()">Next</a></li>
+            </ul>
+        </nav>
+        <div class="table-responsive">
+            <table class="table table-hover table-dark">
+                <thead>
+                <tr>
+                    <th scope="col">Avatar</th>
+                    <th scope="col">Login</th>
+                    <th scope="col">Profile</th>
+                    <th scope="col">Rate</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let course of listObservable | async">
+                    <td valign="center"><img class="profile-img-card" src="{{course.avatar_url}}"/></td>
+                    <td valign="center">{{course.login}}</td>
+                    <td valign="center"><a href="{{course.html_url}}" target="_blank">
+                        <button class="btn btn-lg btn-primary btn-block btn-signin">Profile</button>
+                    </a></td>
+                    <td valign="center"><a>
+                        <button class="btn btn-lg btn-primary btn-block btn-signin" (click)="rateUser(course.login, course.avatar_url)">Rate</button>
+                    </a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <nav>
+            <ul class="pagination justify-content-end">
+                <li class="page-item"><a class="page-link" (click)="previousPage()">Previous</a></li>
+                <li class="page-item"><a class="page-link"  (click)="nextPage()">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
